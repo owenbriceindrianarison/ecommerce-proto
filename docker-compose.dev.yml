@@ -1,0 +1,13 @@
+services:
+  proto:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ecommerce_proto
+    volumes:
+      - .:/workspace:cached
+    environment:
+      # Token BSR injecté pour les commandes buf push (login local)
+      # En CI on utilise plutôt secrets.BUF_TOKEN
+      - BUF_TOKEN=${BUF_TOKEN:-}
+    command: sleep infinity

@@ -1,0 +1,21 @@
+version: v2
+
+# Identifiant unique du module sur le BSR
+# Il sera publié comme buf.build/owenbriceindrianarison/ecommerce
+modules:
+  - path: proto
+    name: buf.build/owenbriceindrianarison/ecommerce
+
+# Règles de lint — STANDARD est le preset recommandé par Buf
+lint:
+  use:
+    - STANDARD
+  except:
+    - PACKAGE_DIRECTORY_MATCH  # protos à plat dans /proto, pas de sous-dossiers par package
+
+# Règles de breaking change — WIRE_COMPATIBLE est le bon niveau pour gRPC :
+# il interdit tout changement qui casserait la compat binaire d'un client
+# qui n'aurait pas encore régénéré ses stubs.
+breaking:
+  use:
+    - WIRE_COMPATIBLE
