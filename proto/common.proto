@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package ecommerce.common.v1;
+
+message Uuid {
+    string value = 1;
+}
+
+message Timestamp {
+    string iso8601 = 1;
+}
+
+message Money {
+    int64 cents = 1;
+    string currency = 2;
+}
+
+message ParentRequest {
+    uint32 page = 1;
+    uint32 per_page = 2;
+}
+
+message PageInfo {
+    uint32 page = 1;
+    uint32 per_page = 2;
+    int64 total = 3;
+    uint32 total_page = 4;
+}
+
+message Empty {}
