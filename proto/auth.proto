@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package ecommerce.auth.v1;
+
+import "common.proto";
+
+service AuthService {
+    rpc Register        (RegisterRequest)                   returns     (RegisterResponse);
+    rpc VerifyEmail     (VerifyEmailRequest)                returns     (ecommerce.common.v1.Empty);
+    rpc Login           (LoginRequest)                      returns     (LoginResponse);
+    rpc RefreshToken    (RefreshTokenRequest)               returns     (LoginResponse);
+    rpc Logout          (ecommerce.common.v1.Empty)         returns     (ecommerce.common.v1.Empty);
+    rpc Me              (ecommerce.common.v1.Empty)         returns     (User);
+    rpc Forgotpassword  (ForgotPasswordRequest)             returns     (ecommerce.common.v1.Empty);
+    rpc ResetPassword   (ResetPasswordRequest)              returns     (ecommerce.common.v1.Empty);
+    rpc RegisterDeviceToken (RegisterDeviceTokenRequest)    returns     (ecommerce.common.v1.Empty);
+}
+
+enum UserRole {
+    USER_ROLE_UNSPECIFIED   = 0;
+    USER_ROLE_CUSTOMER      = 1;
+    USER_ROLE_ADMIN         = 2;
+}
+
+message User {
+    ecommerce.common.v1.Uuid        id              = 1;
+    string                          firstname       = 2;
+    string                          lastname        = 3;
+    string                          email           = 4;
+    string                          hashed_password = 5;
+    UserRole                        role            = 6;
+    bool                            verifed         = 7;
+    ecommerce.common.v1.Timestamp   created_at      = 8;
+}
+
+message AuthTokens {
+    string access_token     = 1;
+    string refresh_token    = 2;
+    string expire_in        = 3;
+}
+
+message RegisterRequest {
+    string firstname    = 1;
+    string lastname     = 2;
+    string email        = 3;
+    string password     = 4;
+}
+
+message RegisterResponse {
+    User    user    = 1;
+    string  message = 2;
+}
+
+message VerifyEmailRequest {
+    string token = 1;
+}
+
+message LoginRequest {
+    string email    = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    User        user    = 1;
+    AuthTokens  tokens  = 2;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message ForgotPasswordRequest {
+    string email = 1;
+}
+
+message ResetPasswordRequest {
+    string token    = 1;
+    string password = 2;
+}
+
+
+message RegisterDeviceTokenRequest {
+    string device_token = 1;
+    string device_name  = 2;
+}
