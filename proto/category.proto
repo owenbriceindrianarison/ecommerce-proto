@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package ecommerce.category.v1;
+
+import "common.proto";
+
+service CategoryService {
+    rpc ListCategories  (ecommerce.common.v1.Empty) returns (ListCategoriesResponse);
+    rpc GetCategory     (GetCategoryRequest)        returns (Category);
+}
+
+message Category {
+    ecommerce.common.v1.Uuid        id          = 1;
+    string                          name        = 2;
+    string                          slug        = 3;
+    optional string                 description = 4;
+    ecommerce.common.v1.Timestamp   created_at  = 5;
+}
+
+message GetCategoryRequest {
+    oneof selector {
+        ecommerce.common.v1.Uuid    id      = 1;
+        string                      slug    = 2;
+    }
+}
+
+message ListCategoriesResponse {
+    repeated Category categories = 1;
+}
