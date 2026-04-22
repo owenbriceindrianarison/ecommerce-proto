@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package ecommerce.product.v1;
+
+import "common.proto";
+import "category.proto";
+
+service ProductService {
+  rpc ListProducts (ListProductsRequest) returns (ListProductsResponse);
+  rpc GetProduct   (GetProductRequest)   returns (Product);
+}
+
+message ProductImage {
+  ecommerce.common.v1.Uuid id         = 1;
+  string                    url        = 2;
+  optional string           alt_text   = 3;
+  bool                      is_primary = 4;
+  int32                     sort_order = 5;
+}
+
+message Product {
+  ecommerce.common.v1.Uuid                id           = 1;
+  optional ecommerce.category.v1.Category category     = 2;
+  string                                   name        = 3;
+  string                                   slug        = 4;
+  optional string                          description = 5;
+  ecommerce.common.v1.Money                price       = 6;
+  int32                                    stock       = 7;
+  optional string                          sku         = 8;
+  bool                                     is_active   = 9;
+  repeated ProductImage                    images      = 10;
+  ecommerce.common.v1.Timestamp            created_at  = 11;
+}
+
+enum SortOrder {
+  SORT_ORDER_UNSPECIFIED = 0;
+  SORT_ORDER_NEWEST      = 1;
+  SORT_ORDER_OLDEST      = 2;
+  SORT_ORDER_PRICE_ASC   = 3;
+  SORT_ORDER_PRICE_DESC  = 4;
+}
+
+message ListProductsRequest {
+  optional string                   search          = 1;
+  optional ecommerce.common.v1.Uuid category_id     = 2;
+  optional int64                    min_price_cents = 3;
+  optional int64                    max_price_cents = 4;
+  SortOrder                         sort            = 5;
+  ecommerce.common.v1.PageRequest   page            = 6;
+}
+
+message ListProductsResponse {
+  repeated Product             products  = 1;
+  ecommerce.common.v1.PageInfo page_info = 2;
+}
+
+message GetProductRequest {
+  oneof selector {
+    ecommerce.common.v1.Uuid id   = 1;
+    string                   slug = 2;
+  }
+}
