@@ -1,7 +1,7 @@
 COMPOSE = docker compose -f docker-compose.dev.yml
 EXEC    = $(COMPOSE) exec proto
 
-.PHONY: up down build logs shell
+.PHONY: up down build logs shell lint breaking check
 # --- Stack ---
 
 up:
@@ -18,3 +18,13 @@ logs:
 
 shell:
 	$(EXEC) bash
+
+# --- Proto validation ---
+
+lint:
+	$(EXEC) buf lint
+
+breaking:
+	$(EXEC) buf breaking --against .git#branch=main
+
+check: lint breaking
