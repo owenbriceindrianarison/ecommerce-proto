@@ -15,7 +15,7 @@ jobs:
       - name: Setup Buf
         uses: bufbuild/buf-action@v1
         with:
-          version: 1.46.0
+          version: 1.68.3
           username: ${{ secrets.BUF_USERNAME }}
           token:    ${{ secrets.BUF_TOKEN }}
 

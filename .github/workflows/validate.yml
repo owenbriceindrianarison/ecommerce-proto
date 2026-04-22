@@ -16,7 +16,8 @@ jobs:
       - name: Setup Buf
         uses: bufbuild/buf-action@v1
         with:
-          version: 1.46.0
+          version: 1.68.3
+          push: false
 
       - name: Lint
         run: buf lint

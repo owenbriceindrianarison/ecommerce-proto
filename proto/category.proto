@@ -5,25 +5,31 @@ package ecommerce.category.v1;
 import "common.proto";
 
 service CategoryService {
-    rpc ListCategories  (ecommerce.common.v1.Empty) returns (ListCategoriesResponse);
-    rpc GetCategory     (GetCategoryRequest)        returns (Category);
+  rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse);
+  rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse);
 }
 
 message Category {
-    ecommerce.common.v1.Uuid        id          = 1;
-    string                          name        = 2;
-    string                          slug        = 3;
-    optional string                 description = 4;
-    ecommerce.common.v1.Timestamp   created_at  = 5;
+  ecommerce.common.v1.Uuid id = 1;
+  string name = 2;
+  string slug = 3;
+  optional string description = 4;
+  ecommerce.common.v1.Timestamp created_at = 5;
+}
+
+message ListCategoriesRequest {}
+
+message ListCategoriesResponse {
+  repeated Category categories = 1;
 }
 
 message GetCategoryRequest {
-    oneof selector {
-        ecommerce.common.v1.Uuid    id      = 1;
-        string                      slug    = 2;
-    }
+  oneof selector {
+    ecommerce.common.v1.Uuid id = 1;
+    string slug = 2;
+  }
 }
 
-message ListCategoriesResponse {
-    repeated Category categories = 1;
+message GetCategoryResponse {
+  Category category = 1;
 }

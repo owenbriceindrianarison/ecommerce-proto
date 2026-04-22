@@ -5,28 +5,28 @@ package ecommerce.payment.v1;
 import "common.proto";
 
 service PaymentService {
-  rpc CreatePaymentIntent (CreatePaymentIntentRequest) returns (CreatePaymentIntentResponse);
-  rpc GetPaymentByOrderId (GetPaymentByOrderIdRequest) returns (Payment);
+  rpc CreatePaymentIntent(CreatePaymentIntentRequest) returns (CreatePaymentIntentResponse);
+  rpc GetPaymentByOrderId(GetPaymentByOrderIdRequest) returns (GetPaymentByOrderIdResponse);
 }
 
 enum PaymentStatus {
   PAYMENT_STATUS_UNSPECIFIED = 0;
-  PAYMENT_STATUS_PENDING     = 1;
-  PAYMENT_STATUS_PROCESSING  = 2;
-  PAYMENT_STATUS_SUCCEEDED   = 3;
-  PAYMENT_STATUS_FAILED      = 4;
-  PAYMENT_STATUS_CANCELLED   = 5;
-  PAYMENT_STATUS_REFUNDED    = 6;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_PROCESSING = 2;
+  PAYMENT_STATUS_SUCCEEDED = 3;
+  PAYMENT_STATUS_FAILED = 4;
+  PAYMENT_STATUS_CANCELLED = 5;
+  PAYMENT_STATUS_REFUNDED = 6;
 }
 
 message Payment {
-  ecommerce.common.v1.Uuid       id                       = 1;
-  ecommerce.common.v1.Uuid       order_id                 = 2;
-  string                          stripe_payment_intent_id = 3;
-  ecommerce.common.v1.Money       amount                   = 4;
-  PaymentStatus                   status                   = 5;
-  optional string                 failure_reason           = 6;
-  ecommerce.common.v1.Timestamp   created_at               = 7;
+  ecommerce.common.v1.Uuid id = 1;
+  ecommerce.common.v1.Uuid order_id = 2;
+  string stripe_payment_intent_id = 3;
+  ecommerce.common.v1.Money amount = 4;
+  PaymentStatus status = 5;
+  optional string failure_reason = 6;
+  ecommerce.common.v1.Timestamp created_at = 7;
 }
 
 message CreatePaymentIntentRequest {
@@ -34,10 +34,14 @@ message CreatePaymentIntentRequest {
 }
 
 message CreatePaymentIntentResponse {
-  string client_secret     = 1;
+  string client_secret = 1;
   string payment_intent_id = 2;
 }
 
 message GetPaymentByOrderIdRequest {
   ecommerce.common.v1.Uuid order_id = 1;
+}
+
+message GetPaymentByOrderIdResponse {
+  Payment payment = 1;
 }
