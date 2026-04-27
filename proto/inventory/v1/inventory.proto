@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+// === Messages ===
+
+message StockItem {
+  string variant_id = 1;
+  int32 available = 2;       // stock disponible (= total - réservé)
+  int32 reserved = 3;        // réservé par des paniers actifs
+  int32 total = 4;           // stock physique total
+}
+
+message GetStockRequest {
+  string variant_id = 1;
+}
+
+message GetStockBatchRequest {
+  repeated string variant_ids = 1;
+}
+
+message GetStockBatchResponse {
+  repeated StockItem items = 1;
+}
+
+message SetStockRequest {
+  string variant_id = 1;
+  int32 total = 2;           // nouveau stock total (admin)
+}
+
+// Réservation temporaire quand un item est ajouté au panier.
+message ReserveStockRequest {
+  string variant_id = 1;
+  int32 quantity = 2;
+  string cart_id = 3;        // pour tracer quelle réservation appartient à quel panier
+}
+
+message ReserveStockResponse {
+  bool success = 1;
+  int32 available_after = 2;
+}
+
+// Libération quand le panier expire ou que l'utilisateur retire un item.
+message ReleaseStockRequest {
+  string variant_id = 1;
+  int32 quantity = 2;
+  string cart_id = 3;
+}
+
+message ReleaseStockResponse {
+  int32 available_after = 1;
+}
+
+// --- Streaming temps réel ---
+message WatchStockRequest {
+  repeated string variant_ids = 1;  // s'abonner aux changements de stock
+}
+
+message StockUpdate {
+  string variant_id = 1;
+  int32 available = 2;
+  int32 reserved = 3;
+}
+
+// === Service ===
+
+service InventoryService {
+  rpc GetStock(GetStockRequest) returns (StockItem);
+  rpc GetStockBatch(GetStockBatchRequest) returns (GetStockBatchResponse);
+  rpc SetStock(SetStockRequest) returns (StockItem);
+  rpc ReserveStock(ReserveStockRequest) returns (ReserveStockResponse);
+  rpc ReleaseStock(ReleaseStockRequest) returns (ReleaseStockResponse);
+
+  // Server-streaming : le client reçoit les mises à jour en temps réel
+  rpc WatchStock(WatchStockRequest) returns (stream StockUpdate);
+}

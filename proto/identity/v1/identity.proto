@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package identity.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// === Messages ===
+
+message User {
+  string id = 1;                              // UUID
+  string email = 2;
+  string first_name = 3;
+  string last_name = 4;
+  UserStatus status = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_PENDING = 1;     // email non vérifié
+  USER_STATUS_ACTIVE = 2;      // email vérifié
+  USER_STATUS_SUSPENDED = 3;
+}
+
+// --- Register ---
+message RegisterRequest {
+  string email = 1;
+  string password = 2;     // sera hashé argon2 côté serveur
+  string first_name = 3;
+  string last_name = 4;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string message = 2;      // "Check your email to activate your account"
+}
+
+// --- Activate ---
+message ActivateAccountRequest {
+  string token = 1;         // token envoyé par email
+}
+
+message ActivateAccountResponse {
+  bool success = 1;
+}
+
+// --- Login ---
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;   // JWT courte durée (15 min)
+  string refresh_token = 2;  // opaque, stocké en base, longue durée (7 jours)
+  User user = 3;
+}
+
+// --- Refresh ---
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;  // rotation : nouveau refresh à chaque usage
+}
+
+// --- Profile ---
+message GetProfileRequest {}  // l'user ID vient du JWT dans les metadata gRPC
+
+message UpdateProfileRequest {
+  string first_name = 1;
+  string last_name = 2;
+}
+
+// --- Logout ---
+message LogoutRequest {
+  string refresh_token = 1;  // invalide le refresh token en base
+}
+
+message LogoutResponse {}
+
+// === Service ===
+
+service IdentityService {
+  // Auth
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc ActivateAccount(ActivateAccountRequest) returns (ActivateAccountResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+
+  // Profile
+  rpc GetProfile(GetProfileRequest) returns (User);
+  rpc UpdateProfile(UpdateProfileRequest) returns (User);
+}

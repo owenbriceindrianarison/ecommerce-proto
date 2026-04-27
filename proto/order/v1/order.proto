@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package order.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// === Messages ===
+
+message Order {
+  string id = 1;
+  string user_id = 2;
+  repeated OrderItem items = 3;
+  common.v1.Money total = 4;
+  OrderStatus status = 5;
+  string tracking_number = 6;        // rempli quand shipped
+  ShippingAddress shipping_address = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_PENDING = 1;          // créé, en attente de paiement
+  ORDER_STATUS_CONFIRMED = 2;        // paiement reçu
+  ORDER_STATUS_SHIPPED = 3;          // expédié
+  ORDER_STATUS_DELIVERED = 4;        // livré
+  ORDER_STATUS_CANCELLED = 5;        // annulé (paiement échoué ou annulation client)
+  ORDER_STATUS_REFUNDED = 6;         // remboursé
+}
+
+message OrderItem {
+  string variant_id = 1;
+  string product_name = 2;
+  string variant_name = 3;
+  int32 quantity = 4;
+  common.v1.Money unit_price = 5;
+  common.v1.Money subtotal = 6;
+}
+
+message ShippingAddress {
+  string line1 = 1;
+  string line2 = 2;
+  string city = 3;
+  string postal_code = 4;
+  string country_code = 5;           // ISO 3166-1 alpha-2
+}
+
+// --- Création depuis le panier ---
+message CreateOrderRequest {
+  ShippingAddress shipping_address = 1;
+  string idempotency_key = 2;        // empêche les doublons si le client retry
+}
+
+message CreateOrderResponse {
+  Order order = 1;
+  string payment_client_secret = 2;  // Stripe client_secret pour le paiement côté client
+}
+
+// --- Lecture ---
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message ListOrdersRequest {
+  common.v1.PaginationRequest pagination = 1;
+}
+
+message ListOrdersResponse {
+  repeated Order orders = 1;
+  common.v1.PaginationResponse pagination = 2;
+}
+
+// --- Streaming suivi ---
+message WatchOrderRequest {
+  string order_id = 1;
+}
+
+// === Service ===
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc GetOrder(GetOrderRequest) returns (Order);
+  rpc ListOrders(ListOrdersRequest) returns (ListOrdersResponse);
+
+  // Server-streaming : suivi en temps réel du statut
+  rpc WatchOrder(WatchOrderRequest) returns (stream Order);
+}
