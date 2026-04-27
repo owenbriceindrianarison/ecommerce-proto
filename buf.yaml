@@ -1,0 +1,14 @@
+# buf.yaml
+version: v2
+modules:
+  - path: proto
+    name: buf.build/owenbriceindrianarison/ecommerce
+lint:
+  use:
+    - STANDARD                # règles de lint standard Buf
+    - COMMENTS                # oblige les commentaires sur les messages/services
+  except:
+    - PACKAGE_VERSION_SUFFIX  # optionnel, si tu ne veux pas forcer le suffixe v1
+breaking:
+  use:
+    - FILE                    # détecte les breaking changes entre commits

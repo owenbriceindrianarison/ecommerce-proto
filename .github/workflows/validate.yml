@@ -1,0 +1,36 @@
+name: Validate protos
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Buf
+        uses: bufbuild/buf-action@v1
+        with:
+          version: 1.68.3
+          push: false
+
+      - name: Lint
+        run: buf lint
+
+      - name: Format check
+        run: buf format --diff --exit-code
+
+      # Vérifie qu'on ne casse pas la compatibilité avec la version actuelle de main
+      - name: Breaking change detection
+        if: github.event_name == 'pull_request'
+        run: |
+          buf breaking \
+            --against "https://github.com/${{ github.repository }}.git#branch=main"
+
+      - name: Build (compile sans générer)
+        run: buf build
