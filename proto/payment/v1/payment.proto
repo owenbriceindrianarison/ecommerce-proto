@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "common/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// === Messages ===
+
+message Payment {
+  string id = 1;
+  string order_id = 2;
+  string stripe_payment_intent_id = 3;
+  common.v1.Money amount = 4;
+  PaymentStatus status = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_PROCESSING = 2;
+  PAYMENT_STATUS_SUCCEEDED = 3;
+  PAYMENT_STATUS_FAILED = 4;
+  PAYMENT_STATUS_REFUNDED = 5;
+}
+
+// Crée un PaymentIntent Stripe et retourne le client_secret.
+message CreatePaymentIntentRequest {
+  string order_id = 1;
+  string idempotency_key = 2;
+}
+
+message CreatePaymentIntentResponse {
+  string client_secret = 1;  // le client (Next.js, iOS) utilise ce secret avec Stripe SDK
+  string payment_id = 2;
+}
+
+message GetPaymentRequest {
+  string order_id = 1;
+}
+
+// Note : les webhooks Stripe arrivent en HTTP (Axum), pas en gRPC.
+// Le handler HTTP vérifie la signature, puis publie un event Kafka
+// qui déclenche la mise à jour côté Order.
+
+// === Service ===
+
+service PaymentService {
+  rpc CreatePaymentIntent(CreatePaymentIntentRequest) returns (CreatePaymentIntentResponse);
+  rpc GetPayment(GetPaymentRequest) returns (Payment);
+}
