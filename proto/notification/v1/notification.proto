@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package notification.v1;
+
+// === Messages ===
+
+// Enregistrement du device token APNs pour les push iOS.
+message RegisterDeviceRequest {
+  string device_token = 1;   // token APNs fourni par iOS
+  string device_name = 2;    // "iPhone de Jean" (optionnel, pour l'admin)
+}
+
+message RegisterDeviceResponse {
+  bool success = 1;
+}
+
+message UnregisterDeviceRequest {
+  string device_token = 1;
+}
+
+message UnregisterDeviceResponse {}
+
+// Préférences de notification de l'utilisateur.
+message NotificationPreferences {
+  bool email_order_updates = 1;
+  bool email_promotions = 2;
+  bool push_order_updates = 3;
+}
+
+message GetPreferencesRequest {}
+
+message UpdatePreferencesRequest {
+  NotificationPreferences preferences = 1;
+}
+
+// === Service ===
+
+service NotificationService {
+  rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse);
+  rpc UnregisterDevice(UnregisterDeviceRequest) returns (UnregisterDeviceResponse);
+  rpc GetPreferences(GetPreferencesRequest) returns (NotificationPreferences);
+  rpc UpdatePreferences(UpdatePreferencesRequest) returns (NotificationPreferences);
+}
