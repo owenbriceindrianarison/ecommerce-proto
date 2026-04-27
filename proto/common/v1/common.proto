@@ -2,10 +2,8 @@ syntax = "proto3";
 
 package common.v1;
 
-import "google/protobuf/timestamp.proto";
-
 message Money {
-  int64 amount = 1;    // montant en plus petite unité (centimes)
+  int64 amount = 1; // montant en plus petite unité (centimes)
   string currency = 2; // code ISO 4217 (EUR, USD…)
 }
 
@@ -17,12 +15,12 @@ message PaginationRequest {
 
 message PaginationResponse {
   string next_page_token = 1; // vide si dernière page
-  int32 total_count = 2;      // nombre total d'éléments (optionnel, coûteux)
+  int32 total_count = 2; // nombre total d'éléments (optionnel, coûteux)
 }
 
 // Wrapper d'erreur standard pour toutes les réponses d'erreur gRPC.
 message ErrorDetail {
-  string code = 1;    // code machine (ex: "INVALID_EMAIL", "STOCK_INSUFFICIENT")
+  string code = 1; // code machine (ex: "INVALID_EMAIL", "STOCK_INSUFFICIENT")
   string message = 2; // message
-  string field = 3;   // champ concerné (validation)
+  string field = 3; // champ concerné (validation)
 }

@@ -6,8 +6,8 @@ package notification.v1;
 
 // Enregistrement du device token APNs pour les push iOS.
 message RegisterDeviceRequest {
-  string device_token = 1;   // token APNs fourni par iOS
-  string device_name = 2;    // "iPhone de Jean" (optionnel, pour l'admin)
+  string device_token = 1; // token APNs fourni par iOS
+  string device_name = 2; // "iPhone de Jean" (optionnel, pour l'admin)
 }
 
 message RegisterDeviceResponse {

@@ -33,7 +33,7 @@ message CreatePaymentIntentRequest {
 }
 
 message CreatePaymentIntentResponse {
-  string client_secret = 1;  // le client (Next.js, iOS) utilise ce secret avec Stripe SDK
+  string client_secret = 1; // le client (Next.js, iOS) utilise ce secret avec Stripe SDK
   string payment_id = 2;
 }
 

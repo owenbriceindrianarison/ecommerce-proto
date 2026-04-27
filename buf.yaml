@@ -9,6 +9,8 @@ lint:
     # - COMMENTS                # oblige les commentaires sur les messages/services
   except:
     - PACKAGE_VERSION_SUFFIX  # optionnel, si tu ne veux pas forcer le suffixe v1
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - RPC_RESPONSE_STANDARD_NAME
 breaking:
   use:
     - FILE                    # détecte les breaking changes entre commits

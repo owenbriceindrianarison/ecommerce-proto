@@ -10,9 +10,9 @@ import "google/protobuf/timestamp.proto";
 message Category {
   string id = 1;
   string name = 2;
-  string slug = 3;           // URL-friendly : "t-shirts-homme"
-  string parent_id = 4;      // vide si racine, permet l'arborescence
-  int32 position = 5;        // ordre d'affichage
+  string slug = 3; // URL-friendly : "t-shirts-homme"
+  string parent_id = 4; // vide si racine, permet l'arborescence
+  int32 position = 5; // ordre d'affichage
 }
 
 message Product {
@@ -38,16 +38,16 @@ enum ProductStatus {
 // Une variante = une combinaison SKU unique (ex: "T-shirt bleu taille M").
 message ProductVariant {
   string id = 1;
-  string sku = 2;                  // Stock Keeping Unit, unique
-  string name = 3;                 // "Bleu / M"
+  string sku = 2; // Stock Keeping Unit, unique
+  string name = 3; // "Bleu / M"
   common.v1.Money price = 4;
-  map<string, string> attributes = 5;  // {"color": "blue", "size": "M"}
+  map<string, string> attributes = 5; // {"color": "blue", "size": "M"}
 }
 
 message ProductImage {
   string id = 1;
-  string url = 2;          // URL signée S3/MinIO (temporaire)
-  int32 position = 3;      // ordre d'affichage
+  string url = 2; // URL signée S3/MinIO (temporaire)
+  int32 position = 3; // ordre d'affichage
   bool is_primary = 4;
 }
 
@@ -71,7 +71,7 @@ message GetProductRequest {
 }
 
 message ListProductsRequest {
-  string category_id = 1;           // filtre optionnel
+  string category_id = 1; // filtre optionnel
   common.v1.PaginationRequest pagination = 2;
 }
 
@@ -82,8 +82,8 @@ message ListProductsResponse {
 
 // --- Recherche full-text ---
 message SearchProductsRequest {
-  string query = 1;                  // texte libre, utilisera tsvector PG
-  string category_id = 2;           // filtre optionnel
+  string query = 1; // texte libre, utilisera tsvector PG
+  string category_id = 2; // filtre optionnel
   common.v1.PaginationRequest pagination = 3;
 }
 
@@ -99,12 +99,12 @@ message SearchProductsResponse {
 // 3. Le client confirme via ConfirmImageUpload
 message GenerateUploadUrlRequest {
   string product_id = 1;
-  string content_type = 2;   // "image/jpeg", "image/png"
+  string content_type = 2; // "image/jpeg", "image/png"
 }
 
 message GenerateUploadUrlResponse {
-  string upload_url = 1;     // URL signée PUT (expire en 15 min)
-  string image_id = 2;       // ID de l'image à confirmer après upload
+  string upload_url = 1; // URL signée PUT (expire en 15 min)
+  string image_id = 2; // ID de l'image à confirmer après upload
 }
 
 message ConfirmImageUploadRequest {
@@ -124,7 +124,7 @@ message CreateCategoryRequest {
 message ListCategoriesRequest {}
 
 message ListCategoriesResponse {
-  repeated Category categories = 1;  // arbre à plat, le client reconstruit
+  repeated Category categories = 1; // arbre à plat, le client reconstruit
 }
 
 // === Service ===

@@ -12,7 +12,7 @@ message Cart {
   string user_id = 2;
   repeated CartItem items = 3;
   common.v1.Money total = 4;
-  google.protobuf.Timestamp expires_at = 5;   // panier expire après X minutes
+  google.protobuf.Timestamp expires_at = 5; // panier expire après X minutes
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
 }
@@ -20,7 +20,7 @@ message Cart {
 message CartItem {
   string variant_id = 1;
   string product_id = 2;
-  string product_name = 3;      // dénormalisé pour l'affichage
+  string product_name = 3; // dénormalisé pour l'affichage
   string variant_name = 4;
   int32 quantity = 5;
   common.v1.Money unit_price = 6;
@@ -38,15 +38,15 @@ message RemoveItemRequest {
 
 message UpdateItemQuantityRequest {
   string variant_id = 1;
-  int32 quantity = 2;           // nouvelle quantité absolue (pas un delta)
+  int32 quantity = 2; // nouvelle quantité absolue (pas un delta)
 }
 
-message GetCartRequest {}       // user ID depuis le JWT
+message GetCartRequest {} // user ID depuis le JWT
 
 message ClearCartRequest {}
 
 // --- Sync multi-device ---
-message WatchCartRequest {}     // user ID depuis le JWT
+message WatchCartRequest {} // user ID depuis le JWT
 
 // === Service ===
 

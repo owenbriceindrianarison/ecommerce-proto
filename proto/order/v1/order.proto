@@ -13,7 +13,7 @@ message Order {
   repeated OrderItem items = 3;
   common.v1.Money total = 4;
   OrderStatus status = 5;
-  string tracking_number = 6;        // rempli quand shipped
+  string tracking_number = 6; // rempli quand shipped
   ShippingAddress shipping_address = 7;
   google.protobuf.Timestamp created_at = 8;
   google.protobuf.Timestamp updated_at = 9;
@@ -21,12 +21,12 @@ message Order {
 
 enum OrderStatus {
   ORDER_STATUS_UNSPECIFIED = 0;
-  ORDER_STATUS_PENDING = 1;          // créé, en attente de paiement
-  ORDER_STATUS_CONFIRMED = 2;        // paiement reçu
-  ORDER_STATUS_SHIPPED = 3;          // expédié
-  ORDER_STATUS_DELIVERED = 4;        // livré
-  ORDER_STATUS_CANCELLED = 5;        // annulé (paiement échoué ou annulation client)
-  ORDER_STATUS_REFUNDED = 6;         // remboursé
+  ORDER_STATUS_PENDING = 1; // créé, en attente de paiement
+  ORDER_STATUS_CONFIRMED = 2; // paiement reçu
+  ORDER_STATUS_SHIPPED = 3; // expédié
+  ORDER_STATUS_DELIVERED = 4; // livré
+  ORDER_STATUS_CANCELLED = 5; // annulé (paiement échoué ou annulation client)
+  ORDER_STATUS_REFUNDED = 6; // remboursé
 }
 
 message OrderItem {
@@ -43,18 +43,18 @@ message ShippingAddress {
   string line2 = 2;
   string city = 3;
   string postal_code = 4;
-  string country_code = 5;           // ISO 3166-1 alpha-2
+  string country_code = 5; // ISO 3166-1 alpha-2
 }
 
 // --- Création depuis le panier ---
 message CreateOrderRequest {
   ShippingAddress shipping_address = 1;
-  string idempotency_key = 2;        // empêche les doublons si le client retry
+  string idempotency_key = 2; // empêche les doublons si le client retry
 }
 
 message CreateOrderResponse {
   Order order = 1;
-  string payment_client_secret = 2;  // Stripe client_secret pour le paiement côté client
+  string payment_client_secret = 2; // Stripe client_secret pour le paiement côté client
 }
 
 // --- Lecture ---

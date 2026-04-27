@@ -6,9 +6,9 @@ package inventory.v1;
 
 message StockItem {
   string variant_id = 1;
-  int32 available = 2;       // stock disponible (= total - réservé)
-  int32 reserved = 3;        // réservé par des paniers actifs
-  int32 total = 4;           // stock physique total
+  int32 available = 2; // stock disponible (= total - réservé)
+  int32 reserved = 3; // réservé par des paniers actifs
+  int32 total = 4; // stock physique total
 }
 
 message GetStockRequest {
@@ -25,14 +25,14 @@ message GetStockBatchResponse {
 
 message SetStockRequest {
   string variant_id = 1;
-  int32 total = 2;           // nouveau stock total (admin)
+  int32 total = 2; // nouveau stock total (admin)
 }
 
 // Réservation temporaire quand un item est ajouté au panier.
 message ReserveStockRequest {
   string variant_id = 1;
   int32 quantity = 2;
-  string cart_id = 3;        // pour tracer quelle réservation appartient à quel panier
+  string cart_id = 3; // pour tracer quelle réservation appartient à quel panier
 }
 
 message ReserveStockResponse {
@@ -53,7 +53,7 @@ message ReleaseStockResponse {
 
 // --- Streaming temps réel ---
 message WatchStockRequest {
-  repeated string variant_ids = 1;  // s'abonner aux changements de stock
+  repeated string variant_ids = 1; // s'abonner aux changements de stock
 }
 
 message StockUpdate {
